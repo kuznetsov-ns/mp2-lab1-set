@@ -24,7 +24,7 @@ TBitField::TBitField(const TBitField &bf) // конструктор копиро
 {
 	BitLen = bf.BitLen;
 	MemLen = bf.MemLen;
-	pMem = new TELEM(MemLen);
+	pMem = new TELEM[MemLen];
 	for (int i = 0; i < MemLen; i++)
 		pMem[i] = bf.pMem[i];
 }
@@ -37,11 +37,15 @@ TBitField::~TBitField()
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
+	if (n < 0) throw "Bit number should be higher";
+	if (n > BitLen) throw "Bit number should be lower";
 	return n / 32;
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
+	if (n < 0) throw "Bit number should be higher";
+	if (n > BitLen) throw "Bit number should be lower";
 	return 1 << (n % 32);
 }
 
@@ -72,7 +76,9 @@ int TBitField::GetBit(const int n) const // получить значение б
 {
 	if (n < 0) throw "Bit number should be higher";
 	if (n > BitLen) throw "Bit number should be lower";
-	unsigned int ret = pMem[GetMemIndex(n)] &= GetMemMask(n);
+	unsigned int ret = pMem[GetMemIndex(n)] & GetMemMask(n);
+	if (ret) return 1;
+	else return 0;
 }
 
 // битовые операции
