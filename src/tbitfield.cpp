@@ -85,17 +85,40 @@ int TBitField::GetBit(const int n) const // получить значение б
 
 TBitField& TBitField::operator=(const TBitField &bf) // присваивание
 {
+	if (&bf == this)
+		return *this;
+	delete[] this->pMem;
+	this->pMem = new TELEM[bf.MemLen];
+	this->BitLen = bf.BitLen;
+	for (int i = 0; i < MemLen; i++)
+		pMem[i] = 0;
 	return *this;
 }
 
 int TBitField::operator==(const TBitField &bf) const // сравнение
 {
-  return 0;
+	if (this->BitLen == bf.BitLen)
+	{
+		for (int i = 0; i < BitLen; i++)
+		{
+			if (pMem[i] != bf.pMem[i])
+				return 0;
+		}
+		return 1;
+	}
 }
 
 int TBitField::operator!=(const TBitField &bf) const // сравнение
 {
-  return 0;
+	if (this->BitLen != bf.BitLen)
+	{
+		for (int i = 0; i < BitLen; i++)
+		{
+			if (pMem[i] == bf.pMem[i])
+				return 0;
+		}
+		return 1;
+	}
 }
 
 TBitField TBitField::operator|(const TBitField &bf) // операция "или"
